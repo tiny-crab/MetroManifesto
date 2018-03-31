@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 	public Slider throttle;
 	public Text velocityText;
 	public Text accelerationText;
-	public Text frictionText;
+	public Text resistanceText;
 	public Text jerkText;
 	public Text distanceText;
 	public Text timerText;
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	private float timer = 30f;
 
 	void Start () {
-		train = createTrain(100f);
+		train = createTrain(5f);
 		currentRoute = designedRoutes.u8;
 		getNextConnection();
 		// monitor win/lose condition in game manager
@@ -39,8 +39,8 @@ public class GameManager : MonoBehaviour {
 		// monitor unloading/loading
 	}
 
-	void FixedUpdate () {
-		train.throttleForce = throttle.value * train.getMass();
+	void Update () {
+		train.throttleForce = throttle.value;
 
 		currentDist -= train.getVelocity();
 
@@ -50,7 +50,8 @@ public class GameManager : MonoBehaviour {
 			timer = 0;
 		}
 
-		if (currentDist < 0 && Mathf.Abs(currentDist) > currentConnection.distance * .01) {
+		// if you're 1% past the stopline
+		if (currentDist < 0 && -currentDist > currentConnection.distance * .01) {
 			getNextConnection();
 		}
 
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour {
 		velocityText.text = "Velocity = " + train.getVelocity();
 		accelerationText.text = "Acceleration = " + train.getAcceleration();
 		jerkText.text = "Jerk = " + train.getJerk();
-		frictionText.text = "Friction = " + train.getFriction();
+		resistanceText.text = "Resistance = " + train.getResistance();
 		distanceText.text = "Distance = " + currentDist;
 		timerText.text = "Timer = " + timer;
 		originText.text = "Origin = " + currentConnection.origin.name;
@@ -75,7 +76,6 @@ public class GameManager : MonoBehaviour {
 		else {
 			Debug.Log("You win!");
 		}
-
 	}
 
 	private Train createTrain(float mass) {

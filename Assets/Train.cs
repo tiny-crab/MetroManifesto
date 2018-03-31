@@ -8,8 +8,11 @@ public class Train : MonoBehaviour {
 
 	private float velocity = 0;
 	private float acceleration = 0;
-	private float friction = 0;
-	private float frictionCoefficient = .2f;
+	private float resistance = 0;
+	private float staticFrictionCoefficient = .2f;
+	private float kineticFrictionCoefficient = .1f;
+	// all constants in drag equation are combined into this single coefficient
+	private float dragCoefficient = 1f;
 
 	public float throttleForce;
 
@@ -26,30 +29,38 @@ public class Train : MonoBehaviour {
 		return velocity; 
 	}
 	public float getAcceleration() {
-		lastAcceleration = acceleration;
 		return acceleration;
 	}
 	public float getJerk() {
 		return (acceleration - lastAcceleration) / Time.fixedDeltaTime;
 	}
-	public float getFriction() {
-		return friction;
+	public float getResistance() {
+		return resistance;
 	}
 
-	void FixedUpdate() {
-		// as velocity increases, friction value approaches acceleration, thus creating an upper limit for velocity
-		if (velocity != 0) {
-			friction = velocity * frictionCoefficient;
-			//rounding to two digits so it can be printed
-			friction = Mathf.Round((friction * 100f)) / 100f;
-		}
-		else {
-			friction = 0;
-		}
-
+	void FixedUpdate () {
 		lastAcceleration = acceleration;
 
-		acceleration = throttleForce - friction;
+		if (throttleForce != 0 && velocity == 0) {
+			if (Mathf.Abs(throttleForce) < mass * staticFrictionCoefficient) {
+				resistance = throttleForce;
+			} else {
+				resistance = 0;
+			}
+		}
+		else if (velocity > 0.1 || velocity < -0.1) {
+			// add kinetic friction
+			resistance = mass * kineticFrictionCoefficient;
+			// add drag force
+			resistance += .5f * Mathf.Pow(velocity, 2) * dragCoefficient;
+		} else {
+			// round down to 0
+			velocity = 0;
+			resistance = 0;
+		}
+
+		// if there are more forces added, change to addition of all forces instead of subtraction
+		acceleration = throttleForce - resistance;
 
 		velocity += acceleration;
 	}
