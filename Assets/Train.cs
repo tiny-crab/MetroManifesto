@@ -12,6 +12,7 @@ public class Train : MonoBehaviour {
 
 	public float throttleForce;
 
+	private float lastVelocity;
 	private float lastAcceleration;
 
 	public float getMass() { 
@@ -25,6 +26,7 @@ public class Train : MonoBehaviour {
 		return velocity; 
 	}
 	public float getAcceleration() {
+		acceleration = (velocity - lastVelocity) / Time.fixedDeltaTime;
 		return acceleration;
 	}
 	public float getJerk() {
@@ -35,15 +37,16 @@ public class Train : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		lastVelocity = velocity;
 		lastAcceleration = acceleration;
 
 		float velocityCap = 10 * (float)Math.Pow(throttleForce, 2);
 
 		// velocity drawn as a exponential function of the throttle
 		if (throttleForce > 0) {
-			velocity += .05f * Mathf.Pow(throttleForce, 2);
+			velocity += .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
 		} else if (throttleForce < 0) {
-			velocity -= .05f * Mathf.Pow(throttleForce, 2);
+			velocity -= .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
 		}
 
 		// if speed is over cap, then logarithmically approach
