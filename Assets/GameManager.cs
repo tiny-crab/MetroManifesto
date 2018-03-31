@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour {
 			connectionIterator++;
 		} 
 		else {
-			Debug.Log("You win!");
+			return;
 		}
 	}
 
