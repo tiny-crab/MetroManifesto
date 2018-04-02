@@ -40,13 +40,18 @@ public class Train : MonoBehaviour {
 		lastVelocity = velocity;
 		lastAcceleration = acceleration;
 
-		float velocityCap = 10 * (float)Math.Pow(throttleForce, 2);
+		float velocityCap = 0;
 
+		// only modify the velocityCap to a positive value if we're speeding up
+		if (throttleForce > 0) {
+			velocityCap = 10 * (float)Math.Pow(throttleForce, 2);
+		}
+	
 		// velocity drawn as a exponential function of the throttle
 		if (throttleForce > 0) {
 			velocity += .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
 		} else if (throttleForce < 0) {
-			velocity -= .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
+			velocity -= .05f * Mathf.Pow(throttleForce, 2) / mass;
 		}
 
 		// if speed is over cap, then logarithmically approach

@@ -16,8 +16,7 @@ public class GameManager : MonoBehaviour {
 	public Text destinationText;
 
 	private Train train;
-
-	private const float trainMass = 1;
+	private float maxJerk = 0;
 
 	private DesignedRoutes designedRoutes = new DesignedRoutes();
 
@@ -42,7 +41,7 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		train.throttleForce = throttle.value;
 
-		currentDist -= train.getVelocity();
+		currentDist -= train.getVelocity() * Time.deltaTime;
 
 		if (timer > 0) {
 			timer -= Time.deltaTime;
@@ -59,6 +58,10 @@ public class GameManager : MonoBehaviour {
 		velocityText.text = "Velocity = " + train.getVelocity();
 		accelerationText.text = "Acceleration = " + train.getAcceleration();
 		jerkText.text = "Jerk = " + train.getJerk();
+		if (train.getJerk() > maxJerk) { 
+			maxJerk = train.getJerk();
+			Debug.Log("Max Jerk = " + maxJerk); 
+		}
 		resistanceText.text = "Resistance = " + train.getResistance();
 		distanceText.text = "Distance = " + currentDist;
 		timerText.text = "Timer = " + timer;
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour {
 			connectionIterator++;
 		} 
 		else {
+			// win condition
 			return;
 		}
 	}
