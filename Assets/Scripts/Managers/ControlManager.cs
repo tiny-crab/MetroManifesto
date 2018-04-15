@@ -9,7 +9,6 @@ public class ControlManager : MonoBehaviour {
 	public Slider throttle;
 	public Button doorButton;
 
-	// don't like this - too tightly coupled
 	private bool buttonState;
 	public bool getButtonState() { return buttonState; }
 
