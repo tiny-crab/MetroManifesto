@@ -3,88 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// The GameManager will handle instantiation and win conditions of the main scene.
 public class GameManager : MonoBehaviour {
 
 	public Slider throttle;
-	public Text velocityText;
-	public Text accelerationText;
-	public Text resistanceText;
-	public Text jerkText;
-	public Text distanceText;
-	public Text timerText;
-	public Text originText;
-	public Text destinationText;
-	public Text doorText;
+
+	public UIManager uiManager;
+	public RouteManager routeManager;
 
 	public bool doorsOpen;
 
 	private Train train;
-	private float maxJerk = 0;
-
-	private DesignedRoutes designedRoutes = new DesignedRoutes();
-
-	private int connectionIterator = 0;
-	private Route currentRoute;
-	private float currentDist;
-
-	private StationConnection currentConnection;
-
-	private float timer = 30f;
 
 	void Start () {
 		train = createTrain(5f);
-		currentRoute = designedRoutes.u8;
-		getNextConnection();
-		// monitor win/lose condition in game manager
-		// monitor values and output in train object
 
-		// monitor unloading/loading
+		// idk if this is a good idea
+		uiManager.setTrain(train);
+		routeManager.setTrain(train);
+
+		uiManager.setRouteManager(routeManager);
 	}
 
 	void Update () {
 		train.throttleForce = throttle.value;
 		train.doorsOpen = doorsOpen;
-
-		currentDist -= train.getVelocity() * Time.deltaTime;
-
-		if (timer > 0) {
-			timer -= Time.deltaTime;
-		} else {
-			timer = 0;
-		}
-
-		// if you're 1% past the stopline
-		if (currentDist < 0 && -currentDist > currentConnection.distance * .01) {
-			getNextConnection();
-		}
-
-		// all this needs to be moved to a UI manager
-		velocityText.text = "Velocity = " + train.getVelocity();
-		accelerationText.text = "Acceleration = " + train.getAcceleration();
-		jerkText.text = "Jerk = " + train.getJerk();
-		if (train.getJerk() > maxJerk) { 
-			maxJerk = train.getJerk();
-			Debug.Log("Max Jerk = " + maxJerk); 
-		}
-		resistanceText.text = "Resistance = " + train.getResistance();
-		distanceText.text = "Distance = " + currentDist;
-		timerText.text = "Timer = " + timer;
-		originText.text = "Origin = " + currentConnection.origin.name;
-		destinationText.text = "Destination = " + currentConnection.destination.name;
-		if (doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
-	}
-
-	private void getNextConnection() {
-		if (currentRoute.connections.Count != connectionIterator) {
-			currentConnection = currentRoute.connections[connectionIterator];
-			currentDist = currentConnection.distance;
-			timer = currentConnection.duration;
-			connectionIterator++;
-		} 
-		else {
-			// win condition
-			return;
-		}
 	}
 
 	private Train createTrain(float mass) {
