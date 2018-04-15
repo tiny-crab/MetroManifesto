@@ -21,15 +21,11 @@ public class ControlManager : MonoBehaviour {
 			.Where( _ => Input.GetButtonDown("down") );
 
 		ThrottleStreamUp
-			.Subscribe(inputMovement => {
-				throttle.value++;
-			})
+			.Subscribe(inputMovement => { throttle.value++; })
 			.AddTo(this);
 
 		ThrottleStreamDown
-			.Subscribe(inputMovement => {
-				throttle.value--;
-			})
+			.Subscribe(inputMovement => { throttle.value--; })
 			.AddTo(this);
 	}
 	
