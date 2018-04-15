@@ -5,13 +5,16 @@ using UnityEngine;
 public class Train : MonoBehaviour {
 
 	private float mass;
+	private float length;
 
 	public bool doorsOpen = false;
 
 	private float velocity = 0;
+	private float velocityCap = 0;
 	private float acceleration = 0;
 	private float resistance = 0;
 
+	public float throttleValue;
 	public float throttleForce;
 
 	private float lastVelocity;
@@ -22,6 +25,13 @@ public class Train : MonoBehaviour {
 	}
 	public void setMass(float mass) {
 		this.mass = mass;
+	}
+
+	public float getLength() {
+		return length;
+	}
+	public void setLength(float length) {
+		this.length = length;
 	}
 
 	public float getVelocity() { 
@@ -42,7 +52,7 @@ public class Train : MonoBehaviour {
 		lastVelocity = velocity;
 		lastAcceleration = acceleration;
 
-		float velocityCap = 0;
+		throttleForce = throttleValue * 10;
 
 		// only modify the velocityCap to a positive value if we're speeding up
 		if (throttleForce > 0) {

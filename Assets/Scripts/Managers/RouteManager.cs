@@ -20,7 +20,7 @@ public class RouteManager : MonoBehaviour {
 	public float timer = 30f;
 
 	void Awake() {
-		train = createTrain(5f);
+		train = createTrain(40000f, 20f);
 	}
 
 	void Start () {
@@ -29,27 +29,25 @@ public class RouteManager : MonoBehaviour {
 	}
 
 	void Update () {
-		train.throttleForce = controlManager.throttle.value;
+		train.throttleValue = controlManager.throttle.value;
 		train.doorsOpen = controlManager.getButtonState();
 
 		currentDist -= train.getVelocity() * Time.deltaTime;
 
-		if (timer > 0) {
-			timer -= Time.deltaTime;
-		} else {
-			timer = 0;
-		}
+		if (timer > 0) { timer -= Time.deltaTime; } 
+		else { timer = 0; }
 
 		// if you're 1% past the stopline
-		if (currentDist < 0 && -currentDist > currentConnection.distance * .01) {
+		if (-currentDist > currentConnection.distance * .01) {
 			getNextConnection();
 		}
 	}
 
-	private Train createTrain(float mass) {
+	private Train createTrain(float mass, float length) {
 		UnityEngine.Object prefab = Resources.Load("TrainPrefab");
 		GameObject gameObject = Instantiate(prefab) as GameObject;
 		Train trainObject = gameObject.GetComponent<Train>();
+		trainObject.setLength(length);
 		trainObject.setMass(mass);
 		return trainObject;
 	}
