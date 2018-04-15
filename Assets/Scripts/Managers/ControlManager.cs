@@ -6,11 +6,12 @@ using UniRx;
 using UniRx.Triggers;
 
 public class ControlManager : MonoBehaviour {
-
-	public GameManager gameManager;
-
 	public Slider throttle;
 	public Button doorButton;
+
+	// don't like this - too tightly coupled
+	private bool buttonState;
+	public bool getButtonState() { return buttonState; }
 
 	public IObservable<Unit> ThrottleStreamUp {get; private set;}
 	public IObservable<Unit> ThrottleStreamDown {get; private set;}
@@ -37,7 +38,7 @@ public class ControlManager : MonoBehaviour {
 			.AddTo(this);
 
 		DoorButtonDown
-			.Subscribe(input => { gameManager.doorsOpen = !gameManager.doorsOpen; })
+			.Subscribe(input => { buttonState = !buttonState; })
 			.AddTo(this);
 	}
 }

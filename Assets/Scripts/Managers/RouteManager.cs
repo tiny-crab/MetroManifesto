@@ -6,8 +6,9 @@ using UnityEngine;
 // and loading/unloading.
 public class RouteManager : MonoBehaviour {
 
-	private Train train;
-	public void setTrain(Train train) { this.train = train; }
+	public Train train;
+
+	public ControlManager controlManager;
 
 	private DesignedRoutes designedRoutes = new DesignedRoutes();
 
@@ -18,14 +19,19 @@ public class RouteManager : MonoBehaviour {
 
 	public float timer = 30f;
 
+	void Awake() {
+		train = createTrain(5f);
+	}
+
 	void Start () {
 		currentRoute = designedRoutes.u8;
 		getNextConnection();
 	}
 
-	
-	// Update is called once per frame
 	void Update () {
+		train.throttleForce = controlManager.throttle.value;
+		train.doorsOpen = controlManager.getButtonState();
+
 		currentDist -= train.getVelocity() * Time.deltaTime;
 
 		if (timer > 0) {
@@ -38,6 +44,14 @@ public class RouteManager : MonoBehaviour {
 		if (currentDist < 0 && -currentDist > currentConnection.distance * .01) {
 			getNextConnection();
 		}
+	}
+
+	private Train createTrain(float mass) {
+		UnityEngine.Object prefab = Resources.Load("TrainPrefab");
+		GameObject gameObject = Instantiate(prefab) as GameObject;
+		Train trainObject = gameObject.GetComponent<Train>();
+		trainObject.setMass(mass);
+		return trainObject;
 	}
 
 	private void getNextConnection() {

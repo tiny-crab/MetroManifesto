@@ -37,6 +37,9 @@ public class UIManager : MonoBehaviour {
 		if (train.doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
 	}
 
-	public void setTrain(Train train) { this.train = train; }
-	public void setRouteManager(RouteManager routeManager) { this.routeManager = routeManager; }
+	public void setRouteManager(RouteManager routeManager) { 
+		this.routeManager = routeManager;
+		this.train = routeManager.train;
+	}
+
 }
