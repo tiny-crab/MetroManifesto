@@ -6,6 +6,8 @@ public class Train : MonoBehaviour {
 
 	private float mass;
 
+	public bool doorsOpen = false;
+
 	private float velocity = 0;
 	private float acceleration = 0;
 	private float resistance = 0;

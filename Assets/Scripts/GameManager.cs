@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour {
 	public Text timerText;
 	public Text originText;
 	public Text destinationText;
+	public Text doorText;
+
+	public bool doorsOpen;
 
 	private Train train;
 	private float maxJerk = 0;
@@ -40,6 +43,7 @@ public class GameManager : MonoBehaviour {
 
 	void Update () {
 		train.throttleForce = throttle.value;
+		train.doorsOpen = doorsOpen;
 
 		currentDist -= train.getVelocity() * Time.deltaTime;
 
@@ -67,6 +71,7 @@ public class GameManager : MonoBehaviour {
 		timerText.text = "Timer = " + timer;
 		originText.text = "Origin = " + currentConnection.origin.name;
 		destinationText.text = "Destination = " + currentConnection.destination.name;
+		if (doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
 	}
 
 	private void getNextConnection() {
