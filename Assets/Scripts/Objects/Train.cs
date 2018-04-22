@@ -37,6 +37,9 @@ public class Train : MonoBehaviour {
 	public float getVelocity() { 
 		return velocity; 
 	}
+	public float getVelocityCap() {
+		return velocityCap;
+	}
 	public float getAcceleration() {
 		acceleration = (velocity - lastVelocity) / Time.fixedDeltaTime;
 		return acceleration;
@@ -54,21 +57,20 @@ public class Train : MonoBehaviour {
 
 		throttleForce = throttleValue * 10;
 
-		// only modify the velocityCap to a positive value if we're speeding up
+		velocityCap = 0;
+
 		if (throttleForce > 0) {
-			velocityCap = 10 * (float)Math.Pow(throttleForce, 2);
-		}
-	
-		// velocity drawn as a exponential function of the throttle
-		if (throttleForce > 0) {
-			velocity += .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
-		} else if (throttleForce < 0) {
-			velocity -= .05f * Mathf.Pow(throttleForce, 2) / mass;
+			// only modify the velocityCap to a positive value if we're speeding up
+			velocityCap = 4 * (float)Math.Pow(throttleValue, 2);
+			if (velocity < velocityCap) {
+				// velocity drawn as a exponential function of the throttle
+				velocity += .05f * Mathf.Pow(throttleForce, 2) / (mass / throttleForce);
+			}
 		}
 
-		// if speed is over cap, then logarithmically approach
+		// if speed is over cap, then linearly approach
 		if (velocity > velocityCap) { 
-			velocity -= (velocity - velocityCap) / 10; 
+			velocity -= 20 * Time.fixedDeltaTime; 
 		}
 		// want to clamp velocity to 0 (no going backwards)
 		if (velocity < 0.01) { velocity = 0; }

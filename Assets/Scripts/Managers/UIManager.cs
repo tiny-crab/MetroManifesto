@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
 	public Text velocityText;
+	public Text velocityCapText;
 	public Text accelerationText;
 	public Text resistanceText;
 	public Text jerkText;
@@ -23,6 +24,7 @@ public class UIManager : MonoBehaviour {
 
 	void Update () {
 		velocityText.text = "Velocity = " + train.getVelocity();
+		velocityCapText.text = "VelocityCap = " + train.getVelocityCap();
 		accelerationText.text = "Acceleration = " + train.getAcceleration();
 		jerkText.text = "Jerk = " + train.getJerk();
 		if (train.getJerk() > maxJerk) {
