@@ -9,6 +9,7 @@ public class RouteManager : MonoBehaviour {
 	public Train train;
 
 	public ControlManager controlManager;
+	public GraphicsManager graphicsManager;
 
 	private DesignedRoutes designedRoutes = new DesignedRoutes();
 
@@ -25,6 +26,7 @@ public class RouteManager : MonoBehaviour {
 
 	void Start () {
 		currentRoute = designedRoutes.u8;
+		graphicsManager.setTrain(train);
 		getNextConnection();
 	}
 
