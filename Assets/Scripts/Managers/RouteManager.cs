@@ -37,8 +37,15 @@ public class RouteManager : MonoBehaviour {
 		if (timer > 0) { timer -= Time.deltaTime; } 
 		else { timer = 0; }
 
-		// if you're 1% past the stopline
-		if (-currentDist > currentConnection.distance * .01) {
+		if (train.getVelocity() == 0 && currentDist < train.getLength()) {
+			if (train.doorsOpen) {
+				train.deboardPassengers(currentConnection.destination);
+				train.boardPassengers(currentConnection.destination.getPassengers());
+			}
+		}
+			
+		// if the train has completely missed the station
+		if (-currentDist > train.getLength()) {
 			getNextConnection();
 		}
 	}
@@ -55,7 +62,12 @@ public class RouteManager : MonoBehaviour {
 	private void getNextConnection() {
 		if (currentRoute.connections.Count != connectionIterator) {
 			currentConnection = currentRoute.connections[connectionIterator];
-			currentDist = currentConnection.distance;
+
+			currentDist = currentConnection.distance - train.getLength();
+
+			// create new passengers for the next station
+			currentConnection.destination.generateNewPassengers(currentRoute);
+
 			timer = currentConnection.duration;
 			connectionIterator++;
 		} 

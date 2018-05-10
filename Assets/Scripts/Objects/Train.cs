@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Train : MonoBehaviour {
@@ -13,6 +13,9 @@ public class Train : MonoBehaviour {
 	private float velocityCap = 0;
 	private float acceleration = 0;
 	private float resistance = 0;
+
+	private Dictionary<Station, List<Passenger>> passengersOnBoard = new Dictionary<Station, List<Passenger>>();
+	private int totalPassengers;
 
 	public float throttleValue;
 	public float throttleForce;
@@ -49,6 +52,38 @@ public class Train : MonoBehaviour {
 	}
 	public float getResistance() {
 		return resistance;
+	}
+
+	public int getTotalPassengers() {
+		return totalPassengers;
+	}
+
+	public void boardPassengers(List<Passenger> passengers) {
+		foreach (Passenger passenger in passengers) {
+			Debug.Log("Passenger going to " + passenger.destination.name);
+			if (passengersOnBoard.ContainsKey(passenger.destination)) {
+				var list = passengersOnBoard[passenger.destination];
+				list.Add(passenger);
+				passengersOnBoard[passenger.destination] = list;
+			} else {
+				var list = new List<Passenger>();
+				list.Add(passenger);
+				passengersOnBoard.Add(passenger.destination, list);
+			}
+			totalPassengers++;
+		}
+	}
+
+	public List<Passenger> deboardPassengers(Station currentStation) {
+		var offload = new List<Passenger>();
+
+		if (passengersOnBoard.ContainsKey(currentStation)) {
+			offload = passengersOnBoard[currentStation];
+			passengersOnBoard.Remove(currentStation);
+			totalPassengers -= offload.Count;
+		}
+
+		return offload;
 	}
 
 	void FixedUpdate () {

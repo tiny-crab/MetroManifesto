@@ -19,7 +19,7 @@ public class DesignedRoutes {
 
 	private Station moritzplatz = new Station("Moritzplatz", 3);
 	private Station kotbusserTor = new Station("Kotbusser Tor", 4);
-	private Station schonleinstrasse = new Station("Schoeleinstrasse", 2);
+	private Station schonleinstrasse = new Station("Schonleinstrasse", 2);
 	private Station hermannplatz = new Station("Hermannplatz", 4);
 	private Station boddinstrasse = new Station("Boddinstrasse", 1);
 	private Station leinestrasse = new Station("Leinestrasse", 1);
