@@ -9,5 +9,7 @@ public class GameManager : MonoBehaviour {
 	public UIManager uiManager;
 	public RouteManager routeManager;
 
-	void Start() { uiManager.setRouteManager(routeManager); }
+	void Start() { 
+		uiManager.setRouteManager(routeManager); 
+	}
 }

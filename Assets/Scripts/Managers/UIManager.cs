@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
 	public Text totalPassengersText;
 	public Text platformText;
 	public Text doorText;
+	public Text scoreText;
 
 	private RouteManager routeManager;
 	private Train train;
@@ -40,6 +41,7 @@ public class UIManager : MonoBehaviour {
 		destinationText.text = "Destination = " + routeManager.currentConnection.destination.name;
 		totalPassengersText.text = "TotalPassengers = " + train.getTotalPassengers();
 		platformText.text = "PassengersOnPlatform = " + routeManager.currentConnection.destination.peekPassengers().Count;
+		scoreText.text = "Score = " + routeManager.getScore();
 		if (train.doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
 	}
 

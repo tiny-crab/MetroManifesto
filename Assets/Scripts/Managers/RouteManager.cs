@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class RouteManager : MonoBehaviour {
 	public StationConnection currentConnection;
 
 	public float timer = 30f;
+
+	private int score = 0;
 
 	void Awake() {
 		train = createTrain(40000f, 20f);
@@ -41,7 +44,21 @@ public class RouteManager : MonoBehaviour {
 
 		if (train.getVelocity() == 0 && currentDist < train.getLength()) {
 			if (train.doorsOpen) {
-				train.deboardPassengers(currentConnection.destination);
+				var deboardedScore = (float)train.deboardPassengers(currentConnection.destination)
+					.Aggregate(0, (acc, x) => acc + x.getScore());
+
+				if (currentDist < 2) {
+					deboardedScore *= 4;
+				}
+				else if (currentDist < 5) {
+					deboardedScore *= 2;
+				}
+				else if (currentDist > 20) {
+					deboardedScore *= .5f;
+				}
+
+				score += Mathf.RoundToInt(deboardedScore);
+
 				train.boardPassengers(currentConnection.destination.getPassengers());
 			}
 		}
@@ -61,6 +78,8 @@ public class RouteManager : MonoBehaviour {
 		return trainObject;
 	}
 
+	public int getScore() { return score; }
+
 	private void getNextConnection() {
 		if (currentRoute.connections.Count != connectionIterator) {
 			currentConnection = currentRoute.connections[connectionIterator];
@@ -78,6 +97,4 @@ public class RouteManager : MonoBehaviour {
 			return;
 		}
 	}
-
-
 }
