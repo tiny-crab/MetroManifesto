@@ -6,6 +6,7 @@ public class Train : MonoBehaviour {
 
 	private float mass;
 	private float length;
+	private int carriages;
 
 	public bool doorsOpen = false;
 
@@ -35,6 +36,13 @@ public class Train : MonoBehaviour {
 	}
 	public void setLength(float length) {
 		this.length = length;
+	}
+
+	public int getNumCarriages() {
+		return carriages;
+	}
+	public void setNumCarriages(int numCarriages) {
+		this.carriages = numCarriages;
 	}
 
 	public float getVelocity() { 

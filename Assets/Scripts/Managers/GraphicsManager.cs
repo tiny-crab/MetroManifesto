@@ -19,11 +19,15 @@ public class GraphicsManager : MonoBehaviour {
 	void Start () {
 		trackPrefab = Resources.Load("TrackPrefab");
 		carriagePrefab = Resources.Load("CarriagePrefab");
+		var locomotive = createInstance(0f, 5.5f, carriagePrefab);
+		var carriageWidth = locomotive.GetComponent<Renderer>().bounds.size.x;
+		var nextCarriageCenter = locomotive.transform.position.x - carriageWidth;
 
 		camHeight = 2f * camera.orthographicSize;
 		camWidth = camHeight * camera.aspect;
 		camCenter = camera.transform.position;
 
+		// track instantiation logic
 		var trackWidth = 0f;
 		var trackLeftOrigin = camCenter.x - (camWidth / 2);
 		while (trackWidth < camWidth) {
@@ -32,7 +36,12 @@ public class GraphicsManager : MonoBehaviour {
 			trackWidth += trackPiece.GetComponent<Renderer>().bounds.size.x;
 		}
 
-		createInstance(0f, 5.5f, carriagePrefab);
+		// carriage instantiation logic
+		// start at 1 since locomotive is already created
+		for (int i = 1; i < train.getNumCarriages(); i++) {
+			createInstance(nextCarriageCenter, locomotive.transform.position.y, carriagePrefab);
+			nextCarriageCenter -= carriageWidth;
+		}
 	}
 	
 	// Update is called once per frame

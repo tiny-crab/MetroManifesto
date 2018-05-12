@@ -75,6 +75,7 @@ public class RouteManager : MonoBehaviour {
 		Train trainObject = gameObject.GetComponent<Train>();
 		trainObject.setLength(length);
 		trainObject.setMass(mass);
+		trainObject.setNumCarriages(6);
 		return trainObject;
 	}
 
