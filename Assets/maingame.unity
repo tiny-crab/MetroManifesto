@@ -1840,10 +1840,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6274995c2e83844d78778918743a947f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 80376946}
+  cam: {fileID: 80376946}
   camHeight: 0
   camWidth: 0
   camCenter: {x: 0, y: 0, z: 0}
+  camRightBound: 0
+  camLeftBound: 0
 --- !u!4 &1746424033
 Transform:
   m_ObjectHideFlags: 0
