@@ -10,7 +10,7 @@ public class RouteManager : MonoBehaviour {
 	public Train train;
 
 	public ControlManager controlManager;
-	public GraphicsManager graphicsManager;
+	public GraphicsManager graphicsManager = GraphicsManager.instance;
 
 	private DesignedRoutes designedRoutes = new DesignedRoutes();
 
@@ -29,7 +29,11 @@ public class RouteManager : MonoBehaviour {
 
 	void Start () {
 		currentRoute = designedRoutes.u8;
+		// this should be extracted to another class eventually
 		graphicsManager.setTrain(train);
+		graphicsManager.addStationaryInstance(Resources.Load("CarriagePrefab"), 0, 5.3f, 0, 0);
+		graphicsManager.addMovingInstance(Resources.Load("TrackPrefab"), 0, 5f, 0, 0,
+			period:ObjectSeries.INSTANCE_WIDTH, repetitions:ObjectSeries.INFINITE_REPS);
 		getNextConnection();
 	}
 

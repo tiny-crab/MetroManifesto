@@ -6,7 +6,6 @@ public class Station {
 	// popularity determines flow and number of passengers generated
 	public int popularity;
 
-	private bool retrieved = false;
 	private List<Passenger> platformPassengers = new List<Passenger>(); 
 
 	public Station(string name, int popularity) {
