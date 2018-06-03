@@ -90,6 +90,15 @@ public class RouteManager : MonoBehaviour {
 			currentConnection = currentRoute.connections[connectionIterator];
 
 			currentDist = currentConnection.distance - train.getLength();
+			graphicsManager.addMovingInstance(
+				Resources.Load("StopSignPrefab"),
+				currentDist,
+				5.5f,
+				0,
+				0,
+				period: ObjectSeries.INSTANCE_WIDTH,
+				repetitions: 1
+			);
 
 			// create new passengers for the next station
 			currentConnection.destination.generateNewPassengers(currentRoute);
