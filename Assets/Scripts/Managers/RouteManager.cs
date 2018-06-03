@@ -79,7 +79,7 @@ public class RouteManager : MonoBehaviour {
 		Train trainObject = gameObject.GetComponent<Train>();
 		trainObject.setLength(length);
 		trainObject.setMass(mass);
-		trainObject.setNumCarriages(6);
+		trainObject.setNumCarriages(1);
 		return trainObject;
 	}
 
@@ -90,6 +90,7 @@ public class RouteManager : MonoBehaviour {
 			currentConnection = currentRoute.connections[connectionIterator];
 
 			currentDist = currentConnection.distance - train.getLength();
+			// TODO this unfortunately doesn't mark the exact place where the train should stop
 			graphicsManager.addMovingInstance(
 				Resources.Load("StopSignPrefab"),
 				currentDist,

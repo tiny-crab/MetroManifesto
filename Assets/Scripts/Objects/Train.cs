@@ -16,6 +16,7 @@ public class Train : MonoBehaviour {
 	private float resistance = 0;
 
 	private Dictionary<Station, List<Passenger>> passengersOnBoard = new Dictionary<Station, List<Passenger>>();
+	private Dictionary<int, List<Passenger>> passengersInCar = new Dictionary<int, List<Passenger>>();
 	private int totalPassengers;
 
 	public float throttleValue;
@@ -66,6 +67,13 @@ public class Train : MonoBehaviour {
 		return totalPassengers;
 	}
 
+	public void Start() {
+		InvokeRepeating("generateGarbage", 0.0f, 5.0f);
+		for (int i = 0; i < carriages; i++) {
+			passengersInCar.Add(i, new List<Passenger>());
+		}
+	}
+
 	public void boardPassengers(List<Passenger> passengers) {
 		foreach (Passenger passenger in passengers) {
 			Debug.Log("Passenger going to " + passenger.destination.name);
@@ -78,6 +86,12 @@ public class Train : MonoBehaviour {
 				list.Add(passenger);
 				passengersOnBoard.Add(passenger.destination, list);
 			}
+			System.Random randCar = new System.Random();
+			var carNum = randCar.Next(0, carriages);
+			var carPassengers = passengersInCar[carNum];
+			carPassengers.Add(passenger);
+			passengersInCar[carNum] = carPassengers;
+
 			totalPassengers++;
 		}
 	}
@@ -89,6 +103,12 @@ public class Train : MonoBehaviour {
 			offload = passengersOnBoard[currentStation];
 			passengersOnBoard.Remove(currentStation);
 			totalPassengers -= offload.Count;
+
+			foreach (Passenger passenger in offload) {
+				var list = passengersInCar[passenger.carriageNum];
+				list.Remove(passenger);
+				passengersInCar[passenger.carriageNum] = list;
+			}
 		}
 
 		return offload;
@@ -117,5 +137,17 @@ public class Train : MonoBehaviour {
 		}
 		// want to clamp velocity to 0 (no going backwards)
 		if (velocity < 0.01) { velocity = 0; }
+	}
+
+	private void generateGarbage() {
+		for(int car = 0; car < carriages; car++) {
+			System.Random random = new System.Random();
+			var probability = random.Next(1, 20);
+			if (probability <= passengersInCar[car].Count) {
+				Debug.Log("Generated garbage in traincar " + car.ToString() + " with " + passengersInCar[car].Count + " passengers" );
+			} else {
+				Debug.Log("Did not generate garbage in traincar " + car.ToString() + " with " + passengersInCar[car].Count + " passengers");
+			}
+		}
 	}
 }
