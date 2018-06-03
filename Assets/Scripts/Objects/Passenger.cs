@@ -11,4 +11,17 @@ public class Passenger {
 	}
 
 	public int getScore() { return score; }
+
+	public void applyModifier(ModifierType modifier, int magnitude) {
+		score -= magnitude;
+		if (score < 0) {
+			score = 0;
+		}
+	}
+
+	public enum ModifierType {
+		Garbage,
+		Schedule,
+		OtherPassengers
+	}
 }

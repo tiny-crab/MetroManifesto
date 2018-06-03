@@ -31,7 +31,6 @@ public class RouteManager : MonoBehaviour {
 		currentRoute = designedRoutes.u8;
 		// this should be extracted to another class eventually
 		graphicsManager.setTrain(train);
-		graphicsManager.addStationaryInstance(Resources.Load("CarriagePrefab"), 0, 5.3f, 0, 0);
 		graphicsManager.addMovingInstance(Resources.Load("TrackPrefab"), 0, 5f, 0, 0,
 			period:ObjectSeries.INSTANCE_WIDTH, repetitions:ObjectSeries.INFINITE_REPS);
 		getNextConnection();
@@ -79,7 +78,7 @@ public class RouteManager : MonoBehaviour {
 		Train trainObject = gameObject.GetComponent<Train>();
 		trainObject.setLength(length);
 		trainObject.setMass(mass);
-		trainObject.setNumCarriages(1);
+		trainObject.setNumCarriages(2);
 		return trainObject;
 	}
 

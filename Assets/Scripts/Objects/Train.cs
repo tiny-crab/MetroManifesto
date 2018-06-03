@@ -6,7 +6,8 @@ public class Train : MonoBehaviour {
 
 	private float mass;
 	private float length;
-	private int carriages;
+	public List<TrainCar> cars = new List<TrainCar>();
+	private float trainCarOffset = 0.0f;
 
 	public bool doorsOpen = false;
 
@@ -16,7 +17,6 @@ public class Train : MonoBehaviour {
 	private float resistance = 0;
 
 	private Dictionary<Station, List<Passenger>> passengersOnBoard = new Dictionary<Station, List<Passenger>>();
-	private Dictionary<int, List<Passenger>> passengersInCar = new Dictionary<int, List<Passenger>>();
 	private int totalPassengers;
 
 	public float throttleValue;
@@ -40,10 +40,21 @@ public class Train : MonoBehaviour {
 	}
 
 	public int getNumCarriages() {
-		return carriages;
+		return cars.Count;
 	}
 	public void setNumCarriages(int numCarriages) {
-		this.carriages = numCarriages;
+		for (int i = 0; i < numCarriages; i++) {
+			cars.Add(createNewTrainCar());
+		}
+	}
+	private TrainCar createNewTrainCar() {
+		UnityEngine.Object prefab = Resources.Load("TrainCarPrefab");
+		GameObject gameObject = Instantiate(prefab) as GameObject;
+		TrainCar trainCarObject = gameObject.GetComponent<TrainCar>();
+		// TODO make GraphicsManager a singleton
+		trainCarObject.transform.position = new Vector3(trainCarOffset, 5.3f);
+		trainCarOffset -= trainCarObject.GetComponent<Renderer>().bounds.size.x;
+		return trainCarObject;
 	}
 
 	public float getVelocity() { 
@@ -68,10 +79,7 @@ public class Train : MonoBehaviour {
 	}
 
 	public void Start() {
-		InvokeRepeating("generateGarbage", 0.0f, 5.0f);
-		for (int i = 0; i < carriages; i++) {
-			passengersInCar.Add(i, new List<Passenger>());
-		}
+		
 	}
 
 	public void boardPassengers(List<Passenger> passengers) {
@@ -87,10 +95,8 @@ public class Train : MonoBehaviour {
 				passengersOnBoard.Add(passenger.destination, list);
 			}
 			System.Random randCar = new System.Random();
-			var carNum = randCar.Next(0, carriages);
-			var carPassengers = passengersInCar[carNum];
-			carPassengers.Add(passenger);
-			passengersInCar[carNum] = carPassengers;
+			var carNum = randCar.Next(0, cars.Count);
+			cars[carNum].passengers.Add(passenger);
 
 			totalPassengers++;
 		}
@@ -105,9 +111,7 @@ public class Train : MonoBehaviour {
 			totalPassengers -= offload.Count;
 
 			foreach (Passenger passenger in offload) {
-				var list = passengersInCar[passenger.carriageNum];
-				list.Remove(passenger);
-				passengersInCar[passenger.carriageNum] = list;
+				cars[passenger.carriageNum].passengers.Remove(passenger);
 			}
 		}
 
@@ -137,17 +141,5 @@ public class Train : MonoBehaviour {
 		}
 		// want to clamp velocity to 0 (no going backwards)
 		if (velocity < 0.01) { velocity = 0; }
-	}
-
-	private void generateGarbage() {
-		for(int car = 0; car < carriages; car++) {
-			System.Random random = new System.Random();
-			var probability = random.Next(1, 20);
-			if (probability <= passengersInCar[car].Count) {
-				Debug.Log("Generated garbage in traincar " + car.ToString() + " with " + passengersInCar[car].Count + " passengers" );
-			} else {
-				Debug.Log("Did not generate garbage in traincar " + car.ToString() + " with " + passengersInCar[car].Count + " passengers");
-			}
-		}
 	}
 }
