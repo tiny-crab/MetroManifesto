@@ -23,7 +23,8 @@ public class UIManager : MonoBehaviour {
 	public Text platformText;
 	public Text doorText;
 	public Text scoreText;
-	public List<Text> carTexts = new List<Text>();
+	public List<Text> passengerTexts = new List<Text>();
+	public List<Text> garbageTexts = new List<Text>();
 
 	private RouteManager routeManager;
 	private Train train;
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour {
 
 		foreach (TrainCar car in train.cars) {
 			UnityEngine.Object prefab = Resources.Load("TrainCarPassengerPrefab");
+
 			GameObject gameObject = Instantiate(prefab) as GameObject;
 			Text passengersText = gameObject.GetComponent<Text>();
 			var carWidth = car.GetComponent<Renderer>().bounds.size.x;
@@ -49,7 +51,17 @@ public class UIManager : MonoBehaviour {
 			);
 			passengersText.transform.SetParent(canvas.transform);
 			passengersText.text = "P = " + car.passengers.Count.ToString();
-			carTexts.Add(passengersText);
+			passengerTexts.Add(passengersText);
+
+			gameObject = Instantiate(prefab) as GameObject;
+			Text garbageText = gameObject.GetComponent<Text>();
+			garbageText.transform.position = GraphicsManager.instance.cam.WorldToScreenPoint(
+				new Vector3(car.transform.position.x + carWidth / 2, car.transform.position.y + (float)1.5)
+			);
+			garbageText.transform.SetParent(canvas.transform);
+			garbageText.text = "G = " + car.garbageCount.ToString();
+			garbageTexts.Add(garbageText);
+
 		}
 	}
 
@@ -62,8 +74,11 @@ public class UIManager : MonoBehaviour {
 			maxJerk = train.getJerk();
 			Debug.Log("Max Jerk = " + maxJerk);
 		}
-		for (var i = 0; i < carTexts.Count; i++) {
-			carTexts[i].text = "P = " + train.cars[i].passengers.Count.ToString();
+		for (var i = 0; i < passengerTexts.Count; i++) {
+			passengerTexts[i].text = "P = " + train.cars[i].passengers.Count.ToString();
+		}
+		for (var i = 0; i < garbageTexts.Count; i++) {
+			garbageTexts[i].text = "G = " + train.cars[i].garbageCount.ToString();
 		}
 		resistanceText.text = "Resistance = " + train.getResistance();
 		distanceText.text = "Distance = " + routeManager.currentDist;
