@@ -6,10 +6,11 @@ using UnityEngine.UI;
 // The GameManager will handle instantiation and win conditions of the main scene.
 public class GameManager : MonoBehaviour {
 
-	public UIManager uiManager;
-	public RouteManager routeManager;
+	public static GameManager instance;
 
-	void Start() { 
-		uiManager.setRouteManager(routeManager); 
+	void Awake() { 
+		if (instance == null) { instance = this; }
+		else if (instance != this) { Destroy(gameObject); }
+		DontDestroyOnLoad(gameObject);
 	}
 }

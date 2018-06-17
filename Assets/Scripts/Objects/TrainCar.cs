@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TrainCar : MonoBehaviour {
 
@@ -11,11 +12,6 @@ public class TrainCar : MonoBehaviour {
 	void Start () {
 		InvokeRepeating("generateGarbage", 0.0f, 5.0f);
 		InvokeRepeating("applyModifier", 0.0f, 10.0f);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	private void generateGarbage() {

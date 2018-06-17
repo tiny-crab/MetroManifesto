@@ -140,8 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc953dfe473964566af020e779a8722c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 627021362}
-  routeManager: {fileID: 1545724484}
 --- !u!4 &35635374
 Transform:
   m_ObjectHideFlags: 0
@@ -864,6 +862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af44b498f1b6448f5b15b6af4555e48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 1655115363}
   velocityText: {fileID: 1372951994}
   velocityCapText: {fileID: 1394587386}
   accelerationText: {fileID: 596894688}
@@ -877,6 +876,7 @@ MonoBehaviour:
   platformText: {fileID: 659931151}
   doorText: {fileID: 1643780562}
   scoreText: {fileID: 2038852777}
+  carTexts: []
 --- !u!4 &627021363
 Transform:
   m_ObjectHideFlags: 0

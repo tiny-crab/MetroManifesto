@@ -20,8 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4600104645479646}
   - component: {fileID: 212268607846910998}
+  - component: {fileID: 114298005436500580}
   m_Layer: 0
-  m_Name: CarriagePrefab
+  m_Name: TrainCarPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,6 +41,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114298005436500580
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1153654976313406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a2eea96c799438c8780141bf422815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  garbageCount: 0
 --- !u!212 &212268607846910998
 SpriteRenderer:
   m_ObjectHideFlags: 1

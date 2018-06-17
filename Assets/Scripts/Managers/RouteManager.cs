@@ -7,6 +7,8 @@ using UnityEngine;
 // and loading/unloading.
 public class RouteManager : MonoBehaviour {
 
+	public static RouteManager instance;
+
 	public Train train;
 
 	public ControlManager controlManager;
@@ -24,6 +26,9 @@ public class RouteManager : MonoBehaviour {
 	private int score = 0;
 
 	void Awake() {
+		if (instance == null) { instance = this; }
+		else if (instance != this) { Destroy(gameObject); }
+		DontDestroyOnLoad(gameObject);
 		train = createTrain(40000f, 20f);
 	}
 
@@ -78,7 +83,7 @@ public class RouteManager : MonoBehaviour {
 		Train trainObject = gameObject.GetComponent<Train>();
 		trainObject.setLength(length);
 		trainObject.setMass(mass);
-		trainObject.setNumCarriages(2);
+		trainObject.setNumCarriages(4);
 		return trainObject;
 	}
 

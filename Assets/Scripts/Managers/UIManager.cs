@@ -7,6 +7,9 @@ using UnityEngine.UI;
 // UI Manager is just reading, not modifying any behavior.
 public class UIManager : MonoBehaviour {
 
+	public static UIManager instance;
+
+	public Canvas canvas;
 	public Text velocityText;
 	public Text velocityCapText;
 	public Text accelerationText;
@@ -20,10 +23,35 @@ public class UIManager : MonoBehaviour {
 	public Text platformText;
 	public Text doorText;
 	public Text scoreText;
+	public List<Text> carTexts = new List<Text>();
 
 	private RouteManager routeManager;
 	private Train train;
 	private float maxJerk = 0;
+
+	void Awake() {
+		if (instance == null) { instance = this; }
+		else if (instance != this) { Destroy(gameObject); }
+		DontDestroyOnLoad(gameObject);
+	}
+
+	void Start() {
+		routeManager = RouteManager.instance;
+		train = routeManager.train;
+
+		foreach (TrainCar car in train.cars) {
+			UnityEngine.Object prefab = Resources.Load("TrainCarPassengerPrefab");
+			GameObject gameObject = Instantiate(prefab) as GameObject;
+			Text passengersText = gameObject.GetComponent<Text>();
+			var carWidth = car.GetComponent<Renderer>().bounds.size.x;
+			passengersText.transform.position = GraphicsManager.instance.cam.WorldToScreenPoint(
+				new Vector3(car.transform.position.x + carWidth / 2, car.transform.position.y + 1)
+			);
+			passengersText.transform.SetParent(canvas.transform);
+			passengersText.text = "P = " + car.passengers.Count.ToString();
+			carTexts.Add(passengersText);
+		}
+	}
 
 	void Update () {
 		velocityText.text = "Velocity = " + train.getVelocity();
@@ -34,6 +62,9 @@ public class UIManager : MonoBehaviour {
 			maxJerk = train.getJerk();
 			Debug.Log("Max Jerk = " + maxJerk);
 		}
+		for (var i = 0; i < carTexts.Count; i++) {
+			carTexts[i].text = "P = " + train.cars[i].passengers.Count.ToString();
+		}
 		resistanceText.text = "Resistance = " + train.getResistance();
 		distanceText.text = "Distance = " + routeManager.currentDist;
 		timerText.text = "Timer = " + routeManager.timer;
@@ -43,11 +74,6 @@ public class UIManager : MonoBehaviour {
 		platformText.text = "PassengersOnPlatform = " + routeManager.currentConnection.destination.peekPassengers().Count;
 		scoreText.text = "Score = " + routeManager.getScore();
 		if (train.doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
-	}
-
-	public void setRouteManager(RouteManager routeManager) { 
-		this.routeManager = routeManager;
-		this.train = routeManager.train;
 	}
 
 }

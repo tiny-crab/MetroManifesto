@@ -9,6 +9,8 @@ public class Train : MonoBehaviour {
 	public List<TrainCar> cars = new List<TrainCar>();
 	private float trainCarOffset = 0.0f;
 
+	private GraphicsManager graphicsManager = GraphicsManager.instance;
+
 	public bool doorsOpen = false;
 
 	private float velocity = 0;
@@ -51,7 +53,7 @@ public class Train : MonoBehaviour {
 		UnityEngine.Object prefab = Resources.Load("TrainCarPrefab");
 		GameObject gameObject = Instantiate(prefab) as GameObject;
 		TrainCar trainCarObject = gameObject.GetComponent<TrainCar>();
-		// TODO make GraphicsManager a singleton
+		// TODO use graphicsmanager for this
 		trainCarObject.transform.position = new Vector3(trainCarOffset, 5.3f);
 		trainCarOffset -= trainCarObject.GetComponent<Renderer>().bounds.size.x;
 		return trainCarObject;
@@ -95,9 +97,9 @@ public class Train : MonoBehaviour {
 				passengersOnBoard.Add(passenger.destination, list);
 			}
 			System.Random randCar = new System.Random();
-			var carNum = randCar.Next(0, cars.Count);
+			var carNum = randCar.Next(cars.Count);
 			cars[carNum].passengers.Add(passenger);
-
+			passenger.carriageNum = carNum;
 			totalPassengers++;
 		}
 	}
@@ -111,7 +113,8 @@ public class Train : MonoBehaviour {
 			totalPassengers -= offload.Count;
 
 			foreach (Passenger passenger in offload) {
-				cars[passenger.carriageNum].passengers.Remove(passenger);
+				var passengerFound = cars[passenger.carriageNum].passengers.Remove(passenger);
+				Debug.Log("Found a passenger: " + passengerFound.ToString());
 			}
 		}
 
