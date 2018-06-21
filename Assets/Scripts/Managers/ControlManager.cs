@@ -7,14 +7,18 @@ using UniRx.Triggers;
 
 public class ControlManager : MonoBehaviour {
 	public Slider throttle;
-	public Button doorButton;
+	public Button cleanButton;
 
-	private bool buttonState;
-	public bool getButtonState() { return buttonState; }
+	private int buttonClicked = 0;
+	public int timesButtonClicked() { 
+		int value = buttonClicked;
+		buttonClicked = 0;
+		return value;
+	}
 
 	public IObservable<Unit> ThrottleStreamUp {get; private set;}
 	public IObservable<Unit> ThrottleStreamDown {get; private set;}
-	public IObservable<Unit> DoorButtonDown {get; private set;}
+	public IObservable<Unit> CleanButtonDown {get; private set;}
 
 	private void Awake () {
 
@@ -25,7 +29,7 @@ public class ControlManager : MonoBehaviour {
 		ThrottleStreamDown = this.FixedUpdateAsObservable()
 			.Where( _ => Input.GetButtonDown("down") );
 
-		DoorButtonDown = doorButton.OnClickAsObservable();
+		CleanButtonDown = cleanButton.OnClickAsObservable();
 
 		// define what happens when events are found in stream
 		ThrottleStreamUp
@@ -35,9 +39,9 @@ public class ControlManager : MonoBehaviour {
 		ThrottleStreamDown
 			.Subscribe(inputMovement => { throttle.value--; })
 			.AddTo(this);
-
-		DoorButtonDown
-			.Subscribe(input => { buttonState = !buttonState; })
+		
+		CleanButtonDown
+			.Subscribe(input => { buttonClicked++; })
 			.AddTo(this);
 	}
 }

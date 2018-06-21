@@ -11,8 +11,11 @@ public class Train : MonoBehaviour {
 
 	private GraphicsManager graphicsManager = GraphicsManager.instance;
 
-	public bool doorsOpen = false;
+<<<<<<< Updated upstream
+	public bool toClean = false;
 
+=======
+>>>>>>> Stashed changes
 	private float velocity = 0;
 	private float velocityCap = 0;
 	private float acceleration = 0;

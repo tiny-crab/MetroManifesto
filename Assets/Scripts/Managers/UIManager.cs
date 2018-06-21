@@ -21,8 +21,8 @@ public class UIManager : MonoBehaviour {
 	public Text destinationText;
 	public Text totalPassengersText;
 	public Text platformText;
-	public Text doorText;
 	public Text scoreText;
+	public Button janitorButton;
 	public List<Text> passengerTexts = new List<Text>();
 	public List<Text> garbageTexts = new List<Text>();
 
@@ -88,7 +88,6 @@ public class UIManager : MonoBehaviour {
 		totalPassengersText.text = "TotalPassengers = " + train.getTotalPassengers();
 		platformText.text = "PassengersOnPlatform = " + routeManager.currentConnection.destination.peekPassengers().Count;
 		scoreText.text = "Score = " + routeManager.getScore();
-		if (train.doorsOpen) { doorText.text = "Close doors"; } else { doorText.text = "Open doors"; }
 	}
 
 }

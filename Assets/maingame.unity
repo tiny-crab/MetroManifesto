@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 355703025}
   - component: {fileID: 355703024}
   m_Layer: 5
-  m_Name: DoorButton
+  m_Name: JanitorButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -874,9 +874,9 @@ MonoBehaviour:
   destinationText: {fileID: 503594993}
   totalPassengersText: {fileID: 1306495680}
   platformText: {fileID: 659931151}
-  doorText: {fileID: 1643780562}
   scoreText: {fileID: 2038852777}
-  carTexts: []
+  passengerTexts: []
+  garbageTexts: []
 --- !u!4 &627021363
 Transform:
   m_ObjectHideFlags: 0
@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throttle: {fileID: 77973344}
-  doorButton: {fileID: 355703024}
+  cleanButton: {fileID: 0}
 --- !u!4 &1245763638
 Transform:
   m_ObjectHideFlags: 0
@@ -1609,7 +1609,7 @@ GameObject:
   - component: {fileID: 1643780563}
   - component: {fileID: 1643780562}
   m_Layer: 5
-  m_Name: DoorText
+  m_Name: JanitorText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1665,7 +1665,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Open Doors
+  m_Text: Add Janitor
 --- !u!222 &1643780563
 CanvasRenderer:
   m_ObjectHideFlags: 0

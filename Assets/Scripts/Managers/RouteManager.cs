@@ -2,14 +2,18 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 // The RouteManager will handle the route the train will take, distance between stations,
 // and loading/unloading.
+
+// TODO this is getting a bit messy by using the graphicsManager + crew stuff
 public class RouteManager : MonoBehaviour {
 
 	public static RouteManager instance;
 
 	public Train train;
+	public JanitorSquad janitorSquad = JanitorSquad.getSquad();
 
 	public ControlManager controlManager;
 	public GraphicsManager graphicsManager = GraphicsManager.instance;
@@ -34,41 +38,49 @@ public class RouteManager : MonoBehaviour {
 
 	void Start () {
 		currentRoute = designedRoutes.u8;
-		// this should be extracted to another class eventually
+
+
+		// TODO this should be extracted to another class eventually
 		graphicsManager.setTrain(train);
 		graphicsManager.addMovingInstance(Resources.Load("TrackPrefab"), 0, 5f, 0, 0,
 			period:ObjectSeries.INSTANCE_WIDTH, repetitions:ObjectSeries.INFINITE_REPS);
+
+		janitorSquad.setRate(2);
+
+		// this should be the last thing executed in this method
 		getNextConnection();
 	}
 
 	void Update () {
 		train.throttleValue = controlManager.throttle.value;
-		train.doorsOpen = controlManager.getButtonState();
 
 		currentDist -= train.getVelocity() * Time.deltaTime;
 
 		if (timer > 0) { timer -= Time.deltaTime; } 
 		else { timer = 0; }
 
+		janitorSquad.queueEmployees(controlManager.timesButtonClicked()); 
+
 		if (train.getVelocity() == 0 && currentDist < train.getLength()) {
-			if (train.doorsOpen) {
-				var deboardedScore = (float)train.deboardPassengers(currentConnection.destination)
-					.Aggregate(0, (acc, x) => acc + x.getScore());
+			
+			if (train.toClean) { cleanTrain(); }
 
-				if (currentDist < 2) {
-					deboardedScore *= 4;
-				}
-				else if (currentDist < 5) {
-					deboardedScore *= 2;
-				}
-				else if (currentDist > 20) {
-					deboardedScore *= .5f;
-				}
+			var deboardedScore = (float)train.deboardPassengers(currentConnection.destination)
+				.Aggregate(0, (acc, x) => acc + x.getScore());
 
-				score += Mathf.RoundToInt(deboardedScore);
-
-				train.boardPassengers(currentConnection.destination.getPassengers());
+			if (currentDist < 2) {
+				deboardedScore *= 4;
 			}
+			else if (currentDist < 5) {
+				deboardedScore *= 2;
+			}
+			else if (currentDist > 20) {
+				deboardedScore *= .5f;
+			}
+
+			score += Mathf.RoundToInt(deboardedScore);
+
+			train.boardPassengers(currentConnection.destination.getPassengers());
 		}
 			
 		// if the train has completely missed the station
@@ -110,10 +122,17 @@ public class RouteManager : MonoBehaviour {
 
 			timer = currentConnection.duration;
 			connectionIterator++;
+
+			janitorSquad.regenerate();
+			Debug.Log(janitorSquad.getCount().ToString() + " janitors now");
 		} 
 		else {
 			// win condition
 			return;
 		}
+	}
+
+	private void cleanTrain() {
+		
 	}
 }
