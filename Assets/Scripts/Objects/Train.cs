@@ -9,13 +9,11 @@ public class Train : MonoBehaviour {
 	public List<TrainCar> cars = new List<TrainCar>();
 	private float trainCarOffset = 0.0f;
 
-	private GraphicsManager graphicsManager = GraphicsManager.instance;
+	public bool locked = false;
+	public List<MonoBehaviour> locks = new List<MonoBehaviour>();
 
-<<<<<<< Updated upstream
 	public bool toClean = false;
 
-=======
->>>>>>> Stashed changes
 	private float velocity = 0;
 	private float velocityCap = 0;
 	private float acceleration = 0;
@@ -124,11 +122,33 @@ public class Train : MonoBehaviour {
 		return offload;
 	}
 
+	public void lockTrain(MonoBehaviour caller) {
+		if (locks.Contains(caller)) {
+			return;
+		} else {
+			locked = true;
+			locks.Add(caller);
+		}
+	}
+
+	public void unlockTrain(MonoBehaviour caller) {
+		if (locks.Contains(caller)) {
+			locks.Remove(caller);
+			if (locks.Count == 0) {
+				locked = false;
+			}
+		}
+		else {
+			return;
+		}
+	}
+
 	void FixedUpdate () {
 		lastVelocity = velocity;
 		lastAcceleration = acceleration;
-
+		
 		throttleForce = throttleValue * 10;
+		if (locked) { throttleForce = 0; }
 
 		velocityCap = 0;
 

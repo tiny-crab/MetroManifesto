@@ -875,6 +875,7 @@ MonoBehaviour:
   totalPassengersText: {fileID: 1306495680}
   platformText: {fileID: 659931151}
   scoreText: {fileID: 2038852777}
+  janitorButton: {fileID: 355703024}
   passengerTexts: []
   garbageTexts: []
 --- !u!4 &627021363
@@ -1214,7 +1215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throttle: {fileID: 77973344}
-  cleanButton: {fileID: 0}
+  cleanButton: {fileID: 355703024}
 --- !u!4 &1245763638
 Transform:
   m_ObjectHideFlags: 0

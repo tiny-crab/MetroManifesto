@@ -1,7 +1,10 @@
 ﻿using System;
+using UnityEngine;
 
 public class Squad {
 
+	//TODO can make the squad types as an enum -> funcs
+	
 	protected int count;
 	protected int rate;
 	protected int queued;
@@ -17,8 +20,19 @@ public class Squad {
 		}
 	}
 
+	public int getQueuedEmployees() {
+		var temp = queued;
+		queued = 0;
+		return temp;
+	}
+
 	public void queueEmployees(int number) {
 		for (int i = 0; i < number; i++) { queueEmployee(); }
+
+		if (number > 0) {
+			Debug.Log("Queued " + number.ToString() + " employees");
+		}
+		
 	}
 
 	public int getEmployees(int number) {

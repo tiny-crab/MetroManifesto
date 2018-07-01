@@ -19,9 +19,9 @@ public class TrainCar : MonoBehaviour {
 		var probability = random.Next(1, 20);
 		if (probability <= passengers.Count) {
 			garbageCount++;
-			Debug.Log("Generated garbage from " + passengers.Count + " passengers" );
+			//Debug.Log("Generated garbage from " + passengers.Count + " passengers" );
 		} else {
-			Debug.Log("Did not generate garbage from " + passengers.Count + " passengers");
+			//Debug.Log("Did not generate garbage from " + passengers.Count + " passengers");
 		}
 	}
 

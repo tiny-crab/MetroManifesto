@@ -39,7 +39,6 @@ public class RouteManager : MonoBehaviour {
 	void Start () {
 		currentRoute = designedRoutes.u8;
 
-
 		// TODO this should be extracted to another class eventually
 		graphicsManager.setTrain(train);
 		graphicsManager.addMovingInstance(Resources.Load("TrackPrefab"), 0, 5f, 0, 0,
@@ -62,8 +61,11 @@ public class RouteManager : MonoBehaviour {
 		janitorSquad.queueEmployees(controlManager.timesButtonClicked()); 
 
 		if (train.getVelocity() == 0 && currentDist < train.getLength()) {
-			
-			if (train.toClean) { cleanTrain(); }
+
+			var janitorQueue = janitorSquad.getQueuedEmployees();
+			if (janitorQueue > 0) {
+				cleanTrain(janitorQueue);
+			}
 
 			var deboardedScore = (float)train.deboardPassengers(currentConnection.destination)
 				.Aggregate(0, (acc, x) => acc + x.getScore());
@@ -132,7 +134,11 @@ public class RouteManager : MonoBehaviour {
 		}
 	}
 
-	private void cleanTrain() {
-		
+	private void cleanTrain(int janitors) {
+		train.lockTrain(this);
+		foreach (TrainCar car in train.cars) { 
+			car.garbageCount = 0;
+		}
+		train.unlockTrain(this);
 	}
 }
