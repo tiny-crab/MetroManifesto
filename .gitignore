@@ -7,6 +7,7 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 Assets/Plugins/*
+UnityPackageManager/*
 # Visual Studio cache directory
 /.vs/
 
